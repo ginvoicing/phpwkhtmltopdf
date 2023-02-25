@@ -23,68 +23,68 @@ class Image
      * @var string the name of the `wkhtmltoimage` binary. Default is
      * `wkhtmltoimage`. You can also configure a full path here.
      */
-    public $binary = 'wkhtmltoimage';
+    public string $binary = 'wkhtmltoimage';
 
     /**
      * @var string the image type. Default is 'png'. Other options are 'jpg'
      * and 'bmp'.
      */
-    public $type = 'png';
+    public string $type = 'png';
 
     /**
      * @var array options to pass to the Command constructor. Default is none.
      */
-    public $commandOptions = array();
+    public array $commandOptions = array();
 
     /**
      * @var string|null the directory to use for temporary files. If `null`
      * (default) the dir is autodetected.
      */
-    public $tmpDir;
+    public string $tmpDir;
 
     /**
      * @var bool whether to ignore any errors if some PDF file was still
      * created. Default is `false`.
      */
-    public $ignoreWarnings = false;
+    public bool $ignoreWarnings = false;
 
     /**
      * @var bool whether the PDF was created
      */
-    protected $_isCreated = false;
+    protected bool $_isCreated = false;
 
     /**
      * @var \mikehaertl\tmp\File|string the page input or a `File` instance for
      * HTML string inputs
      */
-    protected $_page;
+    protected \mikehaertl\tmp\File|string $_page;
 
     /**
      * @var array options for `wkhtmltoimage` as `['--opt1', '--opt2' => 'val',
      * ...]`
      */
-    protected $_options = array();
+    protected array $_options = array();
 
     /**
      * @var \mikehaertl\tmp\File the temporary image file
      */
-    protected $_tmpImageFile;
+    protected \mikehaertl\tmp\File|null|string $_tmpImageFile = null;
 
     /**
      * @var Command the command instance that executes wkhtmltopdf
      */
-    protected $_command;
+    protected Command|null $_command = null;
 
     /**
      * @var string the detailed error message. Empty string if none.
      */
-    protected $_error = '';
+    protected string $_error = '';
 
     /**
      * @param array|string $options global options for wkhtmltoimage, a page
      * URL, a HTML string or a filename
      */
-    public function __construct($options = null)
+    public function __construct(array|string|null $options = null)
     {
         if (is_array($options)) {
             $this->setOptions($options);

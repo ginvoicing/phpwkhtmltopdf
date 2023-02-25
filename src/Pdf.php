@@ -40,74 +40,74 @@ class Pdf
      * @var string the name of the `wkhtmltopdf` binary. Default is
      * `wkhtmltopdf`. You can also configure a full path here.
      */
-    public $binary = 'wkhtmltopdf';
+    public string $binary = 'wkhtmltopdf';
 
     /**
      * @var array options to pass to the Command constructor. Default is none.
      */
-    public $commandOptions = array();
+    public array $commandOptions = array();
 
     /**
      * @var string|null the directory to use for temporary files. If null
      * (default) the dir is autodetected.
      */
-    public $tmpDir;
+    public string|null $tmpDir = null;
 
     /**
      * @var bool whether to ignore any errors if some PDF file was still
      * created. Default is false.
      */
-    public $ignoreWarnings = false;
+    public bool $ignoreWarnings = false;
 
     /**
      * @var bool whether the old version 9 of wkhtmltopdf is used (slightly
      * different syntax). Default is false.
      */
-    public $version9 = false;
+    public bool $version9 = false;
 
     /**
      * @var bool whether the PDF was created
      */
-    protected $_isCreated = false;
+    protected bool $_isCreated = false;
 
     /**
      * @var array global options for `wkhtmltopdf` as `['--opt1', '--opt2' =>
      * 'val', ...]`
      */
-    protected $_options = array();
+    protected array $_options = array();
 
     /**
      * @var array list of wkhtmltopdf objects as arrays
      */
-    protected $_objects = array();
+    protected array $_objects = array();
 
     /**
      * @var \mikehaertl\tmp\File the temporary PDF file
      */
-    protected $_tmpPdfFile;
+    protected \mikehaertl\tmp\File|null $_tmpPdfFile = null;
 
     /**
      * @var \mikehaertl\tmp\File[] list of tmp file objects. This is here to
      * keep a reference to `File` and thus avoid too early call of
      * [[File::__destruct]] if the file is not referenced anymore.
      */
-    protected $_tmpFiles = array();
+    protected array $_tmpFiles = array();
 
     /**
      * @var Command the command instance that executes wkhtmltopdf
      */
-    protected $_command;
+    protected Command|null $_command = null;
 
     /**
      * @var string the detailed error message. Empty string if none.
      */
-    protected $_error = '';
+    protected string $_error = '';
 
     /**
      * @param array|string $options global options for wkhtmltopdf, a page URL,
      * a HTML string or a filename
      */
-    public function __construct($options = null)
+    public function __construct(array|string|null $options = null)
     {
         if (is_array($options)) {
             $this->setOptions($options);
@@ -180,6 +180,19 @@ class Pdf
             return false;
         }
         return true;
+    }
+
+    /**
+     * Disable smart shrinking from the configurations
+     */
+    public function disableSmartShrinking(): void {
+        foreach($this->_options as $key => $value) {
+            if($value === 'enable-smart-shrinking') {
+                unset($this->_options[$key]);
+            }
+        }
+        $this->_options[] = 'disable-smart-shrinking';
+        return;
     }
 
     /**

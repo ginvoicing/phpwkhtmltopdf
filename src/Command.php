@@ -17,19 +17,19 @@ class Command extends BaseCommand
     /**
      * @var bool whether to enable the built in Xvfb support (uses xvfb-run)
      */
-    public $enableXvfb = false;
+    public bool $enableXvfb = false;
 
     /**
      * @var string the name of the xvfb-run comand. Default is `xvfb-run`.  You
      * can also configure a full path here.
      */
-    public $xvfbRunBinary = 'xvfb-run';
+    public  string$xvfbRunBinary = 'xvfb-run';
 
     /**
      * @var string options to pass to the xfvb-run command. Default is
      * `--server-args="-screen 0, 1024x768x24"`.
      */
-    public $xvfbRunOptions = '-a --server-args="-screen 0, 1024x768x24"';
+    public string $xvfbRunOptions = '-a --server-args="-screen 0, 1024x768x24"';
 
     /**
      * @param array $args args to add to the command. These can be:
@@ -95,7 +95,7 @@ class Command extends BaseCommand
      * @return string|bool the command to execute with optional Xfvb wrapper
      * applied. Null if none set.
      */
-    public function getExecCommand()
+    public function getExecCommand(): string|bool
     {
         $command = parent::getExecCommand();
         if ($this->enableXvfb) {

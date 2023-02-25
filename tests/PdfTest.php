@@ -379,6 +379,28 @@ class PdfTest extends TestCase
         $this->assertEquals("$binary '--no-outline' '--margin-top' '0' '$inFile' '$tmpFile'", (string) $pdf->getCommand());
         unlink($outFile);
     }
+
+    public function testCanDisableSmartShirinkingOption()
+    {
+        $inFile = $this->getHtmlAsset();
+        $outFile = $this->getOutFile();
+        $binary = $this->getBinary();
+
+        $pdf = new Pdf;
+        $pdf->setOptions(array(
+            'binary' => $binary,
+            'enable-smart-shrinking'
+        ));
+        $pdf->disableSmartShrinking();
+        $this->assertInstanceOf('mikehaertl\wkhtmlto\Pdf', $pdf->addPage($inFile));
+        $this->assertTrue($pdf->saveAs($outFile));
+        $this->assertFileExists($outFile);
+
+        $tmpFile = $pdf->getPdfFilename();
+        $this->assertEquals("$binary '--disable-smart-shrinking' '$inFile' '$tmpFile'", (string) $pdf->getCommand());
+        unlink($outFile);
+    }
+
     public function testSetPageCoverAndTocOptions()
     {
         $inFile = $this->getHtmlAsset();
